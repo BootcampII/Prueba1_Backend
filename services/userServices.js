@@ -13,11 +13,11 @@ export async function getUsers() {
   }
 }
 
-export async function createUser(user) {
-  const { name, email, password } = user;
+export async function createUser(userData) {
+  const { name, email, password } = userData;
   try {
-    const user = await User.findOne({ email });
-    if (user) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       return `Existe un usuario con el ${email}`;
     }
     const dbUser = User.create({
@@ -46,7 +46,7 @@ export async function loginUser(user) {
     // if (password != userInDB.password) {
     //   throw new Error("Invalid password");
     // }
-    const token = generateToken({ email: email });
+    const token = generateToken({ userInDB }); //email: email
     return token;
   } catch (error) {
     console.log(error);
@@ -88,6 +88,42 @@ export async function deleteAllUsers() {
     throw new Error(`Error to delete all users: ${error.message}`);
   }
 }
+
+// export async function updateUserById(_id, updates) {
+//   try {
+//     const user = await User.findById(_id).exec();
+//     if (!user) {
+//       throw new Error("User not found");
+//     }
+
+//     const { name, email, password } = updates;
+//     user.name = name || user.name;
+//     user.email = email || user.email;
+//     user.password = password || user.password;
+
+//     await user.save();
+//     return user;
+//   } catch (error) {
+//     throw new Error(`Error updating user: ${error.message}`);
+//   }
+// }
+
+// export async function updateUserById(_id, updates) {
+//   try {
+//     const updatedUser = await User.findByIdAndUpdate(_id, updates, {
+//       new: true,
+//       runValidators: true,
+//     });
+
+//     if (!updatedUser) {
+//       throw new Error("User not found");
+//     }
+
+//     return updatedUser;
+//   } catch (error) {
+//     throw new Error(`Error updating user: ${error.message}`);
+//   }
+// }
 
 export async function updateUserById(_id, updateData) {
   try {

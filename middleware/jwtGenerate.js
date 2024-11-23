@@ -4,7 +4,9 @@ process.loadEnvFile();
 function generateToken(user) {
   try {
     const secret = process.env.SECRECT_KEY;
-    const token = jwt.sign(user, secret, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id, email: user.email }, secret, {
+      expiresIn: "1h",
+    });
     return token;
   } catch (error) {
     console.log(error);
